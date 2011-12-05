@@ -1,0 +1,28 @@
+From ef61c70ea10aa6c564943d481bbe349f51e17c89 Mon Sep 17 00:00:00 2001
+From: Gordon Sim <gsim@apache.org>
+Date: Wed, 30 Jun 2010 15:40:55 +0000
+Subject: [PATCH 2/2] Bug 547295 - Fixed - qpid-stat -b threading exception during shutdown
+
+Ensure that any additional brokers in the cluster being monitored are cleaned up correctly
+
+git-svn-id: https://svn.apache.org/repos/asf/qpid/trunk@959353 13f79535-47bb-0310-9956-ffa450edef68
+(cherry picked from commit 9d4ade225f53af4cd60dc68b5d906f81b0856e75)
+---
+ qpid/tools/src/py/qpid-stat |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/qpid/tools/src/py/qpid-stat b/qpid/tools/src/py/qpid-stat
+index fd28435..f882cee 100755
+--- a/qpid/tools/src/py/qpid-stat
++++ b/qpid/tools/src/py/qpid-stat
+@@ -158,6 +158,7 @@ class BrokerManager(Console):
+     def Disconnect(self):
+         if self.broker:
+             self.qmf.delBroker(self.broker)
++        for b in self.brokers: self.qmf.delBroker(b.broker)
+ 
+     def _getCluster(self):
+         packages = self.qmf.getPackages()
+-- 
+1.7.0.1
+
